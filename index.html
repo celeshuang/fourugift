@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>禮品商一站式展示頁</title>
+    <style>
+        :root {
+            --primary-dark: #2d3436;
+            --accent-gold: #d4a373;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --gray: #636e72;
+        }
+
+        body {
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-light);
+            color: var(--primary-dark);
+            line-height: 1.6;
+        }
+
+        /* 1. 刊頭輪播區 */
+        .hero-section {
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            position: relative;
+        }
+        .hero-track {
+            display: flex;
+            width: 700%; 
+            height: 100%;
+            animation: heroInfinte 28s infinite;
+        }
+        .hero-slide {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            background-color: #444;
+        }
+        
+        @keyframes heroInfinte {
+            0%, 12% { transform: translateX(0%); }
+            14%, 26% { transform: translateX(-14.28%); }
+            28%, 40% { transform: translateX(-28.57%); }
+            42%, 54% { transform: translateX(-42.85%); }
+            56%, 68% { transform: translateX(-57.14%); }
+            70%, 82% { transform: translateX(-71.42%); }
+            84%, 96% { transform: translateX(-85.71%); }
+            100% { transform: translateX(0%); }
+        }
+
+        /* 通用標題樣式 */
+        .section-header {
+            padding: 50px 20px 10px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-header h2 {
+            font-size: 1.6rem;
+            border-left: 6px solid var(--accent-gold);
+            padding-left: 15px;
+            margin: 0;
+        }
+
+        /* 橫向滑動容器：自動等高關鍵 */
+        .scroll-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 20px;
+            align-items: stretch; 
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .scroll-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: #dfe6e9;
+            border-radius: 10px;
+        }
+
+        /* 2 & 3. 產品與案例卡片 */
+        .card {
+            min-width: 390px;
+            max-width: 390px;
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column; 
+            transition: transform 0.3s;
+        }
+        
+        @media (max-width: 480px) {
+            .card {
+                min-width: 85vw;
+                max-width: 85vw;
+            }
+        }
+
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .badge-nda {
+            background: #fff0f0;
+            color: #eb4d4b;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            align-self: flex-start;
+            margin-bottom: 8px;
+        }
+
+        /* FB 嵌入容器：修正裁切問題 */
+        .fb-embed-container {
+            background: #f0f2f5;
+            border-radius: 8px;
+            margin: 10px 0;
+            min-height: 500px;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .card-footer-text {
+            margin-top: auto; 
+            padding-top: 15px;
+            font-size: 0.8rem;
+            color: var(--gray);
+            border-top: 1px dashed #eee;
+        }
+
+        /* IG 偽裝樣式 */
+        .ig-fake-embed {
+            position: relative;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #efefef;
+            margin: 10px 0;
+            flex-grow: 1;
+            background: #fafafa;
+        }
+        .ig-fake-embed img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: 0.3s;
+        }
+        .ig-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            opacity: 0;
+            transition: 0.3s;
+        }
+        .ig-fake-embed:hover .ig-overlay { opacity: 1; }
+
+        /* 合作夥伴 Logo 區 */
+        .logo-section {
+            background: white;
+            padding: 40px 20px;
+            margin: 20px 0;
+        }
+        .logo-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .logo-item {
+            flex: 0 0 calc(50% - 20px);
+            max-width: 150px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: grayscale(100%);
+            opacity: 0.5;
+            transition: 0.3s;
+        }
+        @media (min-width: 768px) {
+            .logo-item { flex: 0 0 calc(25% - 20px); }
+        }
+        .logo-item:hover { filter: grayscale(0%); opacity: 1; }
+        .logo-item img { max-width: 90%; max-height: 80%; object-fit: contain; }
+
+        /* 底部資訊 */
+        footer {
+            background: var(--primary-dark);
+            color: #dfe6e9;
+            padding: 60px 20px;
+        }
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+        .footer-qr { display: flex; gap: 25px; }
+        .qr-box { text-align: center; font-size: 0.8rem; }
+        .qr-placeholder {
+            width: 110px; height: 110px;
+            background: white; border-radius: 8px; margin-bottom: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: #333; font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero-section">
+        <div class="hero-track">
+            <div class="hero-slide" style="background-image: url('https://via.placeholder.com/1920x800?text=Slide+1')">專業禮品開發</div>
+            <div class="hero-slide" style="background-image: url('https://via.placeholder.com/1920x800?text=Slide+2')">企業客製首選</div>
+            <div class="hero-slide" style="background-image: url('https://via.placeholder.com/1920x800?text=Slide+3')">一站式設計生產</div>
+            <div class="hero-slide" style="background-image: url('https://via.placeholder.com/1920x800?text=Slide+4')">節慶促銷方案</div>
+            <div class="hero-slide" style="background-image: url('https://via.placeholder.com/1920x800?text=Slide+5')">國際品牌合作實績</div>
+            <div class="hero-slide" style="background-image: url('https://via.placeholder.com/1920x800?text=Slide+6')">高品質質感保證</div>
+            <div class="hero-slide" style="background-image: url('https://via.placeholder.com/1920x800?text=Slide+7')">立即連繫我們</div>
+        </div>
+    </section>
+
+    <div class="section-header">
+        <h2>近期新產品</h2>
+    </div>
+    <div class="scroll-container">
+        <div class="card">
+            <img src="https://via.placeholder.com/400x300?text=Product+1" alt="產品">
+            <div class="card-content">
+                <h4>質感生活隨行杯</h4>
+                <p>公版現貨，支援少量客製印製 LOGO。</p>
+                <p class="card-footer-text">點擊圖片看更多規格</p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="https://via.placeholder.com/400x300?text=Product+2" alt="產品">
+            <div class="card-content">
+                <h4>多功能環保收納袋</h4>
+                <p>再生材質製造，符合企業 ESG 採購趨勢。</p>
+                <p class="card-footer-text">點擊圖片看更多規格</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-header">
+        <h2>客戶實績案例</h2>
+    </div>
+    <div class="scroll-container">
+        <div class="card">
+            <div class="card-content">
+                <span class="badge-nda">社群轉載</span>
+                <h4>高雄夢時代 - 活動贈品實績</h4>
+                <div class="fb-embed-container">
+                    <iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fdreammall.tw%2Fposts%2Fpfbid02JktMeMs9AJj1UAsdwdGATDsJMPDyoSwzWQAdTnrMoVyvqPow1rHS6wvM7WS3cFdvl&show_text=true&width=350" 
+                        width="100%" height="500" style="border:none;overflow:hidden;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+                    </iframe>
+                </div>
+                <p class="card-footer-text">來源：夢時代購物中心 官方粉絲團</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-content">
+                <span class="badge-nda">Instagram 熱門轉載</span>
+                <h4>客戶品牌聯名分享</h4>
+                <div class="ig-fake-embed">
+                    <a href="https://www.instagram.com/reel/DPvsqJoEcag/?utm_source=ig_web_copy_link" target="_blank">
+                        <img src="image/ig-han.png" alt="IG 貼文截圖">
+                        <div class="ig-overlay"><span>點擊查看 IG 原文</span></div>
+                    </a>
+                </div>
+                <p class="card-footer-text">來源：Instagram @hanshine.arena</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://via.placeholder.com/400x500?text=NDA+Project+A" alt="案例">
+            <div class="card-content">
+                <span class="badge-nda">NDA 案件</span>
+                <h4>國際連鎖咖啡品牌</h4>
+                <p>客製化手工皮革證件套，特殊壓印工藝展示。</p>
+                <p class="card-footer-text">合作項目：設計 / 生產</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-header">
+        <h2>合作夥伴 / 服務客戶</h2>
+    </div>
+    <div class="logo-section">
+        <div class="logo-grid">
+            <div class="logo-item"><img src="image/bk.jpg" alt="Logo"></div>
+            <div class="logo-item"><img src="image/fanfans.png" alt="Logo"></div>
+            <div class="logo-item"><img src="image/everrich.png" alt="Logo"></div>
+            <div class="logo-item"><img src="image/books.jpg" alt="Logo"></div>
+            <div class="logo-item"><img src="image/eslite.png" alt="Logo"></div>
+            <div class="logo-item"><img src="image/medialink.png" alt="Logo"></div>
+            <div class="logo-item"><img src="image/skechers.png" alt="Logo"></div>
+            <div class="logo-item"><img src="https://via.placeholder.com/150x80?text=更多客戶" alt="Logo"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-info">
+                <h3>聯絡資訊</h3>
+                <p><strong>肆優禮品有限公司</strong></p>
+                <p>電話：(02) 1234-5678</p>
+                <p>地址：台北市中山區新生北路二段31-1號6樓之5</p>
+            </div>
+            <div class="footer-info">
+                <h3>即時溝通</h3>
+                <div class="footer-qr">
+                    <div class="qr-box"><div class="qr-placeholder">LINE</div><span>聯絡我們(April)</span></div>
+                    <div class="qr-box"><div class="qr-placeholder">LINE</div><span>聯絡我們(Kevin)</span></div>
+                </div>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 50px; font-size: 0.75rem; color: #666;">
+            &copy; 2025 fouruift Co., Ltd. 版權所有。
+        </p>
+    </footer>
+</body>
+</html>
